@@ -9,9 +9,10 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Authors>TuEquipo</Authors>
-    <Company>TuEmpresa</Company>
+    <Authors>WP Dev Team</Authors>
+    <Company>WP </Company>
     <Copyright>Copyright © $([System.DateTime]::Now.Year)</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj' And

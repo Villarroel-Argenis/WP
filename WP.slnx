@@ -1,1 +1,11 @@
-<Solution />
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="WP.Api/WP.Api.csproj" />
+    <Project Path="WP.Application/WP.Application.csproj" />
+    <Project Path="WP.Domain/WP.Domain.csproj" />
+    <Project Path="WP.Infrastructure/WP.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="WP.Domain.Tests/WP.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
