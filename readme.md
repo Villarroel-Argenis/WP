@@ -1,3 +1,2 @@
 # Wallet Personal
-
-This is a personal wallet for storing and managing your cryptocurrency assets. It provides a secure and user-friendly interface for accessing your funds, making transactions, and monitoring your portfolio.
+Esta es una billetera personal para almacenar y gestionar tus activos de criptomonedas. Proporciona una interfaz segura y fácil de usar para acceder a tus fondos, realizar transacciones y monitorear tu portafolio.
