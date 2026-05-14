@@ -6,6 +6,7 @@
     <Project Path="WP.Infrastructure/WP.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="WP.Application.Tests/WP.Application.Tests.csproj" />
     <Project Path="WP.Domain.Tests/WP.Domain.Tests.csproj" />
   </Folder>
 </Solution>
