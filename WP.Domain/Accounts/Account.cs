@@ -26,6 +26,13 @@ public sealed class Account
     public DateTime CreatedAt { get; }
 
     /// <summary>
+    /// Inicializa una nueva instancia de la clase Account sin parámetros.
+    /// </summary>
+#pragma warning disable CS8618 // El constructor sin parámetros es para uso de ORM y no inicializa propiedades no nulas, ya que serán asignadas por el framework de mapeo objeto-relacional.
+    private Account() {}
+#pragma warning restore CS8618
+
+    /// <summary>
     /// Inicializa una nueva instancia de la clase Account.
     /// </summary>
     /// <param name="id">El identificador único de la cuenta.</param>
