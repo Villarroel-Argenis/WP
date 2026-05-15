@@ -7,22 +7,22 @@ namespace WP.Application.Tests;
 public sealed class RegisterTransactionCommandHandlerTests
 {
     private readonly IAccountRepository _accountRepository;
-    private readonly ITransactionRepository _transactionRepository;
-    private readonly IValidator<RegisterTransactionCommand> _validator;
     private readonly RegisterTransactionCommandHandler _handler;
-
+    private readonly IDomainEventDispatcher _dispatcher;
     /// <summary>
     /// Inicializa una nueva instancia de la clase de pruebas.
     /// </summary>
     public RegisterTransactionCommandHandlerTests()
     {
         _accountRepository = Substitute.For<IAccountRepository>();
-        _transactionRepository = Substitute.For<ITransactionRepository>();
-        _validator = Substitute.For<IValidator<RegisterTransactionCommand>>();
+        ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
+        IValidator<RegisterTransactionCommand> validator = Substitute.For<IValidator<RegisterTransactionCommand>>();
+        _dispatcher = Substitute.For<IDomainEventDispatcher>();
         _handler = new RegisterTransactionCommandHandler(
             _accountRepository,
-            _transactionRepository,
-            _validator);
+            transactionRepository,
+            validator,
+            _dispatcher);
     }
 
     /// <summary>
@@ -117,5 +117,25 @@ public sealed class RegisterTransactionCommandHandlerTests
 
         await Should.ThrowAsync<ArgumentException>(() =>
             _handler.Handle(command, CancellationToken.None));
+    }
+
+    /// <summary>
+    /// Verifica que registrar un ingreso despacha el evento de dominio.
+    /// </summary>
+    [Fact]
+    public async Task HandleConIngresoValidoDespachaEventoDeDominioAsync()
+    {
+        var account = Account.Create("Ahorros", Money.Of(1_000m, Currency.Dop));
+        _accountRepository.GetByIdAsync(account.Id, Arg.Any<CancellationToken>())
+            .Returns(account);
+
+        var command = new RegisterTransactionCommand(
+            account.Id, 500m, "DOP", "Income", "Salario");
+
+        await _handler.Handle(command, CancellationToken.None);
+
+        await _dispatcher.Received(1).DispatchAsync(
+            Arg.Any<IAggregateRoot>(),
+            Arg.Any<CancellationToken>());
     }
 }

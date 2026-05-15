@@ -20,6 +20,10 @@ public static class DependencyInjection
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
 
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.AddScoped<IDomainEventConsumer<TransactionRegisteredDomainEvent>,
+            OnTransactionRegistered>();
         return services;
     }
 }
