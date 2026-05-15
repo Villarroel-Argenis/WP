@@ -36,5 +36,5 @@ public sealed record Money(decimal Amount, Currency Currency)
     /// <param name="money">El monto a restar.</param>
     /// <returns>Un nuevo Money con la resta de los montos.</returns>
     /// <exception cref="InvalidOperationException">Se lanza si las monedas son diferentes.</exception>
-    public Money Substract(Money money) => Currency != money.Currency ? throw new InvalidOperationException("No se pueden restar montos con diferentes monedas.") : new Money(Amount - money.Amount, Currency);
+    public Money Subtract(Money money) => Currency != money.Currency ? throw new InvalidOperationException("No se pueden restar montos con diferentes monedas.") : new Money(Amount - money.Amount, Currency);
 }
