@@ -33,7 +33,9 @@ public partial class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logg
 
         if(exception is ValidationException validationException)
         {
-            problemDetails.Extensions["errors"] = validationException.Errors;
+            problemDetails.Extensions["errors"] = validationException.Errors.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.ToArray());
         }
 
         httpContext.Response.StatusCode = statusCode;

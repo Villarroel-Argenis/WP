@@ -18,6 +18,17 @@ public sealed class AccountRepository(WpDbContext context) : IAccountRepository
     }
 
     /// <summary>
+    /// Actualiza una cuenta existente en el repositorio.
+    /// </summary>
+    /// <param name="account">La cuenta a actualizar.</param>
+    /// <param name="cancellationToken">Token de cancelación.</param>
+    public async Task UpdateAsync(Account account, CancellationToken cancellationToken)
+    {
+        context.Accounts.Update(account);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <summary>
     /// Obtiene una cuenta por su identificador de forma asíncrona.
     /// </summary>
     /// <param name="id">El identificador único de la cuenta.</param>

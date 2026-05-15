@@ -5,6 +5,7 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using WP.Domain.Accounts;
 global using WP.Domain.Primitives;
+global using  WP.Domain.Transactions;
 global using WP.Infrastructure.Persistence;
 global using WP.Infrastructure.Persistence.Repositories;
 

@@ -66,4 +66,24 @@ public sealed class Account
 
         return new Account(id, name, initialBalance, createdAt);
     }
+
+    /// <summary>
+    /// Aplica un ingreso al balance de la cuenta.
+    /// </summary>
+    /// <param name="amount">Monto del ingreso.</param>
+    public void ApplyIncome(Money amount)
+    {
+        ArgumentNullException.ThrowIfNull(amount);
+        Balance = Balance.Add(amount);
+    }
+
+    /// <summary>
+    /// Aplica un gasto al balance de la cuenta.
+    /// </summary>
+    /// <param name="amount">Monto del gasto.</param>
+    public void ApplyExpense(Money amount)
+    {
+        ArgumentNullException.ThrowIfNull(amount);
+        Balance = Balance.Subtract(amount);
+    }
 }

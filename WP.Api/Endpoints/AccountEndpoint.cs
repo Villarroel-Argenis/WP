@@ -23,6 +23,14 @@ public static class AccountEndpoint
             .WithName("GetAccountById")
             .WithOpenApi();
 
+        app.MapPost("/accounts/{accountId:guid}/transactions", RegisterTransactionAsync)
+            .WithName("RegisterTransaction")
+            .WithOpenApi();
+
+        app.MapGet("/accounts/{accountId:guid}/transactions", GetTransactionsByAccountIdAsync)
+            .WithName("GetTransactionsByAccountId")
+            .WithOpenApi();
+
         return app;
     }
 
@@ -52,6 +60,42 @@ public static class AccountEndpoint
         AccountResponse? response = await handler.Handle(query, cancellationToken);
         return Results.Ok(response);
     }
+
+    /// <summary>
+    /// Registra una nueva transacción en una cuenta.
+    /// </summary>
+    private static async Task<IResult> RegisterTransactionAsync(
+        Guid accountId,
+        RegisterTransactionRequest request,
+        ICommandHandler<RegisterTransactionCommand, Guid> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new RegisterTransactionCommand(
+            accountId,
+            request.Amount,
+            request.CurrencyCode,
+            request.Type,
+            request.Description,
+            request.TargetAccountId,
+            request.Tags);
+
+        Guid id = await handler.Handle(command, cancellationToken);
+
+        return Results.Created($"/accounts/{accountId}/transactions/{id}", new { id });
+    }
+
+    /// <summary>
+    /// Obtiene las transacciones de una cuenta.
+    /// </summary>
+    private static async Task<IResult> GetTransactionsByAccountIdAsync(
+        Guid accountId,
+        IQueryHandler<GetTransactionsByAccountIdQuery, IReadOnlyList<TransactionResponse>> handler,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetTransactionsByAccountIdQuery(accountId);
+        IReadOnlyList<TransactionResponse> response = await handler.Handle(query, cancellationToken);
+        return Results.Ok(response);
+    }
 }
 
 /// <summary>
@@ -64,3 +108,20 @@ public sealed record CreateAccountRequest(
     string Name,
     decimal InitialAmount,
     string CurrencyCode);
+
+/// <summary>
+/// Solicitud para registrar una nueva transacción.
+/// </summary>
+/// <param name="Amount">Monto de la transacción.</param>
+/// <param name="CurrencyCode">Código de la moneda.</param>
+/// <param name="Type">Tipo de transacción: Income, Expense o Transfer.</param>
+/// <param name="Description">Descripción opcional.</param>
+/// <param name="TargetAccountId">Cuenta destino, solo para transferencias.</param>
+/// <param name="Tags">Etiquetas opcionales.</param>
+public sealed record RegisterTransactionRequest(
+    decimal Amount,
+    string CurrencyCode,
+    string Type,
+    string? Description = null,
+    Guid? TargetAccountId = null,
+    IEnumerable<string>? Tags = null);
