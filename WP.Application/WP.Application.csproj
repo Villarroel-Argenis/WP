@@ -10,4 +10,8 @@
       <ProjectReference Include="..\WP.Domain\WP.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    </ItemGroup>
+
 </Project>
