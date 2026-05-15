@@ -11,6 +11,7 @@ public static class DependencyInjection
     /// <param name="services">La colección de servicios a la que se agregarán los servicios de infraestructura.</param>
     /// <param name="configuration">La configuración de la aplicación utilizada para configurar los servicios.</param>
     /// <returns>La colección de servicios actualizada con los servicios de infraestructura agregados.</returns>
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<WpDbContext>(options =>
