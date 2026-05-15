@@ -19,16 +19,14 @@ public static class AccountEndpoint
             .WithName("CreateAccount")
             .WithOpenApi();
 
+        app.MapGet("/accounts/{id}", GetAccountByIdAsync)
+            .WithName("GetAccountById")
+            .WithOpenApi();
+
         return app;
     }
 
-    /// <summary>
-    /// Maneja la solicitud para crear una nueva cuenta.
-    /// </summary>
-    /// <param name="request">La solicitud con los datos de la nueva cuenta.</param>
-    /// <param name="handler">El manejador del comando para crear la cuenta.</param>
-    /// <param name="cancellationToken">Token de cancelación opcional.</param>
-    /// <returns>Una respuesta HTTP 201 Created con el identificador de la cuenta creada.</returns>
+
     private static async Task<IResult> CreateAccountAsync(
         CreateAccountRequest request,
         ICommandHandler<CreateAccountCommand, Guid> handler,
@@ -42,6 +40,24 @@ public static class AccountEndpoint
         Guid id = await handler.Handle(command, cancellationToken);
 
         return Results.Created($"/accounts/{id}", new { id });
+    }
+
+    private static async Task<IResult> GetAccountByIdAsync(
+        Guid id,
+        IQueryHandler<GetAccountByIdQuery, AccountResponse?> handler,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var query = new GetAccountByIdQuery(id);
+            AccountResponse? response = await handler.Handle(query, cancellationToken);
+
+            return Results.Ok(response);
+        }
+        catch (NotFoundException ex)
+        {
+            return Results.NotFound(new { ex.Message });
+        }
     }
 }
 
