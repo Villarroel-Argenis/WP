@@ -47,17 +47,10 @@ public static class AccountEndpoint
         IQueryHandler<GetAccountByIdQuery, AccountResponse?> handler,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var query = new GetAccountByIdQuery(id);
-            AccountResponse? response = await handler.Handle(query, cancellationToken);
 
-            return Results.Ok(response);
-        }
-        catch (NotFoundException ex)
-        {
-            return Results.NotFound(new { ex.Message });
-        }
+        var query = new GetAccountByIdQuery(id);
+        AccountResponse? response = await handler.Handle(query, cancellationToken);
+        return Results.Ok(response);
     }
 }
 
