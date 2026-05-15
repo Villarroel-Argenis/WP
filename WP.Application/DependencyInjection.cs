@@ -14,6 +14,8 @@ public static class DependencyInjection
     {
         services.AddScoped<ICommandHandler<CreateAccountCommand, Guid>, CreateAccountCommandHandler>();
         services.AddScoped<IQueryHandler<GetAccountByIdQuery, AccountResponse?>, GetAccountByIdQueryHandler>();
+
+        services.AddScoped<IValidator<CreateAccountCommand>, CreateAccountCommandValidator>();
         return services;
     }
 }

@@ -19,6 +19,7 @@ public partial class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logg
         {
             NotFoundException => (StatusCodes.Status404NotFound, "Recurso no encontrado"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Solicitud invalida"),
+            ValidationException => (StatusCodes.Status400BadRequest, "Errores de validacion"),
             _ => (StatusCodes.Status500InternalServerError, "Error interno dek servidor")
         };
 
@@ -29,6 +30,11 @@ public partial class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logg
             Title = title,
             Detail = exception.Message
         };
+
+        if(exception is ValidationException validationException)
+        {
+            problemDetails.Extensions["errors"] = validationException.Errors;
+        }
 
         httpContext.Response.StatusCode = statusCode;
 

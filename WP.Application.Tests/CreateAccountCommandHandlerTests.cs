@@ -7,6 +7,7 @@ public class CreateAccountCommandHandlerTests
 {
     private readonly IAccountRepository _repository;
     private readonly CreateAccountCommandHandler _handler;
+    private readonly IValidator<CreateAccountCommand> _validator;
 
     /// <summary>
     /// Inicializa una nueva instancia de la clase de pruebas.
@@ -14,7 +15,8 @@ public class CreateAccountCommandHandlerTests
     public CreateAccountCommandHandlerTests()
     {
         _repository = Substitute.For<IAccountRepository>();
-        _handler = new CreateAccountCommandHandler(_repository);
+        _validator = Substitute.For<IValidator<CreateAccountCommand>>();
+        _handler = new CreateAccountCommandHandler(_repository, _validator);
     }
 
     /// <summary>
@@ -67,6 +69,28 @@ public class CreateAccountCommandHandlerTests
         var command = new CreateAccountCommand("Ahorros", 1_000m, "XX");
 
         await Should.ThrowAsync<ArgumentException>(() =>
+            _handler.Handle(command, CancellationToken.None));
+    }
+
+    /// <summary>
+    /// Verifica que el manejo con validación fallida lanza ValidationException.
+    /// </summary>
+    /// <exception cref="ValidationException"></exception>
+    [Fact]
+    public async Task HandleConValidacionFallidaLanzaValidationExceptionAsync()
+    {
+        var errors = new Dictionary<string, List<string>>
+        {
+            { "InitialAmount", ["El monto inicial no puede ser negativo."] }
+        };
+
+        _validator
+            .When(v => v.Validate(Arg.Any<CreateAccountCommand>()))
+            .Do(_ => throw new ValidationException(errors));
+
+        var command = new CreateAccountCommand("Ahorros", -100m, "DOP");
+
+        await Should.ThrowAsync<ValidationException>(() =>
             _handler.Handle(command, CancellationToken.None));
     }
 }
