@@ -1,10 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable IDE0161
 namespace WP.Infrastructure.Persistence.Data.Migrations
+#pragma warning restore IDE0161
 {
     /// <inheritdoc />
     public partial class AddTransactions : Migration
