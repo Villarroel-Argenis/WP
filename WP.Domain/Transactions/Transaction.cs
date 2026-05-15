@@ -1,11 +1,14 @@
+using WP.Domain.Transactions.Events;
+
 namespace WP.Domain.Transactions;
 
 /// <summary>
 /// Representa una transacción financiera en el sistema.
 /// </summary>
-public sealed class Transaction
+public sealed class Transaction : IAggregateRoot
 {
     private readonly List<Tag> _tags = [];
+    private readonly List<IDomainEvent> _domainEvents = [];
 
     /// <summary>Identificador único de la transacción.</summary>
     public Guid Id { get; }
@@ -75,7 +78,7 @@ public sealed class Transaction
     {
         ArgumentNullException.ThrowIfNull(amount);
 
-        return new Transaction(
+        var transaction = new Transaction(
             Guid.NewGuid(),
             accountId,
             amount,
@@ -84,6 +87,13 @@ public sealed class Transaction
             null,
             tags?.Select(Tag.From).ToList() ?? [],
             DateTime.UtcNow);
+
+        transaction.RaiseDomainEvent(new TransactionRegisteredDomainEvent(
+            transaction.Id,
+            transaction.AccountId,
+            transaction.Type));
+
+        return transaction;
     }
 
     /// <summary>
@@ -102,7 +112,7 @@ public sealed class Transaction
     {
         ArgumentNullException.ThrowIfNull(amount);
 
-        return new Transaction(
+        var transaction = new Transaction(
             Guid.NewGuid(),
             accountId,
             amount,
@@ -111,6 +121,13 @@ public sealed class Transaction
             null,
             tags?.Select(Tag.From).ToList() ?? [],
             DateTime.UtcNow);
+
+        transaction.RaiseDomainEvent(new TransactionRegisteredDomainEvent(
+            transaction.Id,
+            transaction.AccountId,
+            transaction.Type));
+
+        return transaction;
     }
 
     /// <summary>
@@ -136,7 +153,7 @@ public sealed class Transaction
             throw new ArgumentException("TransferId no puede ser vacío.", nameof(transferId));
         }
 
-        return new Transaction(
+        var transaction = new Transaction(
             Guid.NewGuid(),
             accountId,
             amount,
@@ -145,5 +162,26 @@ public sealed class Transaction
             transferId,
             tags?.Select(Tag.From).ToList() ?? [],
             DateTime.UtcNow);
+
+        transaction.RaiseDomainEvent(new TransactionRegisteredDomainEvent(
+            transaction.Id,
+            transaction.AccountId,
+            transaction.Type));
+
+        return transaction;
     }
+
+    /// <summary>
+    /// Obtiene los eventos de dominio pendientes.
+    /// </summary>
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    /// <summary>
+    /// Limpia los eventos de dominio después de ser despachados.
+    /// </summary>
+    public void ClearDomainEvents() => _domainEvents.Clear();
+
+    private void RaiseDomainEvent(IDomainEvent domainEvent) =>
+        _domainEvents.Add(domainEvent);
+
 }
