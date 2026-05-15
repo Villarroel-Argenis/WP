@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  COVERAGE_THRESHOLD: 50
+  COVERAGE_THRESHOLD: 85
 
 jobs:
   test:
