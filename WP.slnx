@@ -4,9 +4,11 @@
     <Project Path="WP.Application/WP.Application.csproj" />
     <Project Path="WP.Domain/WP.Domain.csproj" />
     <Project Path="WP.Infrastructure/WP.Infrastructure.csproj" />
+    <Project Path="WP.SourceGenerators/WP.SourceGenerators.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="WP.Application.Tests/WP.Application.Tests.csproj" />
     <Project Path="WP.Domain.Tests/WP.Domain.Tests.csproj" />
+    <Project Path="WP.SourceGenerators.Tests/WP.SourceGenerators.Tests.csproj" />
   </Folder>
 </Solution>
