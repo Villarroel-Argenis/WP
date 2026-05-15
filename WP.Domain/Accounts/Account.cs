@@ -29,6 +29,7 @@ public sealed class Account
     /// Inicializa una nueva instancia de la clase Account sin parámetros.
     /// </summary>
 #pragma warning disable CS8618 // El constructor sin parámetros es para uso de ORM y no inicializa propiedades no nulas, ya que serán asignadas por el framework de mapeo objeto-relacional.
+    [ExcludeFromCodeCoverage]
     private Account() {}
 #pragma warning restore CS8618
 
@@ -74,6 +75,7 @@ public sealed class Account
     public void ApplyIncome(Money amount)
     {
         ArgumentNullException.ThrowIfNull(amount);
+
         Balance = Balance.Add(amount);
     }
 
