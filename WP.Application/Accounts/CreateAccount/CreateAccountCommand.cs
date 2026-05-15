@@ -1,4 +1,4 @@
-namespace WP.Application.Accounts;
+namespace WP.Application.Accounts.CreateAccount;
 
 /// <summary>
 /// Representa el comando para crear una cuenta.

@@ -1,5 +1,10 @@
 @WP_Api_HostAddress = http://localhost:5187
 
+GET {{WP_Api_HostAddress}}/accounts/76408a5f-c30c-41be-ac53-f9b159579255
+Accept: application/json
+
+###
+
 POST {{WP_Api_HostAddress}}/accounts/
 Accept: application/json
 Content-Type: application/json

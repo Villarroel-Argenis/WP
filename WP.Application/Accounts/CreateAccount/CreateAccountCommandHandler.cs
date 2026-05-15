@@ -1,4 +1,4 @@
-namespace WP.Application.Accounts;
+namespace WP.Application.Accounts.CreateAccount;
 
 /// <summary>
 /// Manejador para el comando CreateAccount.
