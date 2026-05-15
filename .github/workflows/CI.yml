@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+env:
+  COVERAGE_THRESHOLD: 90
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,20 +23,24 @@ jobs:
       - run: dotnet build --no-restore --configuration Release
 
       - name: Test con cobertura
-        run: |
-          dotnet test --no-build --configuration Release \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./coverage \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Threshold=90 \
-            DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ThresholdType=Line \
-            DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ThresholdStat=Total
-
+        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --results-directory ./coverage
 
       - name: Instalar ReportGenerator
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
       - name: Generar reporte
         run: reportgenerator -reports:"./coverage/**/coverage.cobertura.xml" -targetdir:"./coverage/report" -reporttypes:"Html;Cobertura"
+
+      - name: Verificar umbral de cobertura
+        run: |
+          LINE_RATE=$(grep -oP '(?<=line-rate=")[^"]+' ./coverage/report/Cobertura.xml | head -1)
+          PERCENTAGE=$(awk "BEGIN {printf \"%.0f\", $LINE_RATE * 100}")
+          echo "Line coverage: $PERCENTAGE%"
+          if [ "$PERCENTAGE" -lt "$COVERAGE_THRESHOLD" ]; then
+            echo "❌ Coverage $PERCENTAGE% está por debajo del umbral $COVERAGE_THRESHOLD%"
+            exit 1
+          fi
+          echo "✅ Coverage $PERCENTAGE% cumple el umbral $COVERAGE_THRESHOLD%"
 
       - name: Subir reporte como artefacto
         uses: actions/upload-artifact@v4
