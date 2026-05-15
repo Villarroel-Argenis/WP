@@ -47,8 +47,13 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
 
         result.Count.ShouldBe(2);
         result[0].Type.ShouldBe("Income");
+        result[0].Amount.ShouldBe(500m);
+        result[0].CurrencyCode.ShouldBe("DOP");
+        result[0].Description.ShouldBe("Salario");
         result[0].Tags.ShouldContain("salario");
         result[1].Type.ShouldBe("Expense");
+        result[1].Amount.ShouldBe(200m);
+        result[1].Description.ShouldBe("Supermercado");
     }
 
     /// <summary>
