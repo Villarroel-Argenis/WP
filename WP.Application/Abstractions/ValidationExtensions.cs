@@ -1,7 +1,7 @@
 namespace WP.Application.Abstractions;
 
 /// <summary>
-/// Clase de extensión que proporciona métodos para agregar errores de validación a un diccionario de errores. Esta clase facilita la construcción de mensajes de error de validación de manera estructurada, permitiendo asociar múltiples mensajes de error a un mismo field. Es especialmente útil en el contexto de validadores que implementan la interfaz IValidator<T>, donde se pueden acumular errores de validación y luego lanzar una excepción con todos los errores encontrados.
+/// Clase de extensión que proporciona métodos para agregar errores de validación a un diccionario de errores. Esta clase facilita la construcción de mensajes de error de validación de manera estructurada, permitiendo asociar múltiples mensajes de error a un mismo field. Es especialmente útil en el contexto de validadores que implementan la interfaz IValidator<T>, donde se pueden acumular errores de validación y luego lanzar una excepción con todos los errores encontrados.</T>
 /// </summary>
 public static class ValidationExtensions
 {
