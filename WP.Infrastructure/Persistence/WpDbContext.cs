@@ -11,6 +11,11 @@ public class WpDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Account> Accounts => Set<Account>();
 
     /// <summary>
+    /// Obtiene el conjunto de entidades Transaction.
+    /// </summary>
+    public DbSet<Transaction> Transactions => Set<Transaction>();
+
+    /// <summary>
     /// Configura el modelo de datos al crear el modelo.
     /// </summary>
     /// <param name="modelBuilder">El constructor del modelo utilizado para configurar las entidades.</param>

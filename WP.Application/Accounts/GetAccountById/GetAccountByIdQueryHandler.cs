@@ -1,5 +1,3 @@
-using WP.Domain.Exceptions;
-
 namespace WP.Application.Accounts.GetAccountById;
 
 /// <summary>

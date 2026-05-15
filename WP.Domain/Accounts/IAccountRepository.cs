@@ -14,6 +14,13 @@ public interface IAccountRepository
     Task AddAsync(Account account, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Actualiza una cuenta existente en el repositorio.
+    /// </summary>
+    /// <param name="account">La cuenta a actualizar.</param>
+    /// <param name="cancellationToken">Token de cancelación.</param>
+    Task UpdateAsync(Account account, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Obtiene una cuenta por su identificador de forma asíncrona.
     /// </summary>
     /// <param name="id">El identificador único de la cuenta.</param>

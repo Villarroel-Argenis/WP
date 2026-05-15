@@ -1,4 +1,5 @@
 @WP_Api_HostAddress = http://localhost:5187
+@accountId = 63d65c2e-fe13-4f84-92a8-6b442fd7fa58
 
 GET {{WP_Api_HostAddress}}/accounts/74c94422-c7d7-4bc5-9070-98c23fecc0a3
 Accept: application/json
@@ -12,7 +13,26 @@ Content-Type: application/json
 {
     "name": "Ahorros",
     "initialAmount": 1000.00,
-    "currencyCode": "AAA"
+    "currencyCode": "DOP"
 }
 
 ###
+
+POST {{WP_Api_HostAddress}}/accounts/{{accountId}}/transactions
+Accept: application/json
+Content-Type: application/json
+
+{
+    "amount": 500.00,
+    "currencyCode": "DOP",
+    "type": "Income",
+    "description": "Salario",
+    "tags": ["salario", "trabajo"]
+}
+
+###
+
+GET {{WP_Api_HostAddress}}/accounts/{{accountId}}/transactions
+Accept: application/json
+
+
