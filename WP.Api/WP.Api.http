@@ -1,6 +1,13 @@
-@WP.Api_HostAddress = http://localhost:5187
+@WP_Api_HostAddress = http://localhost:5187
 
-GET {{WP.Api_HostAddress}}/weatherforecast/
+POST {{WP_Api_HostAddress}}/accounts/
 Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Ahorros",
+    "initialAmount": 1000.00,
+    "currencyCode": "DOP"
+}
 
 ###

@@ -1,13 +1,20 @@
-﻿using System;
+﻿#pragma warning disable // Archivo generado automáticamente por Entity Framework Core - se suprime todas las advertencias
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WP.Infrastructure.Persistence.Data.Migrations
 {
+    /// <summary>
+    /// Migración inicial para crear la tabla de cuentas.
+    /// </summary>
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        /// <summary>
+        /// Aplica la migración creando la tabla de cuentas.
+        /// </summary>
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +34,9 @@ namespace WP.Infrastructure.Persistence.Data.Migrations
                 });
         }
 
+        /// <summary>
+        /// Revierte la migración eliminando la tabla de cuentas.
+        /// </summary>
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
@@ -35,3 +45,5 @@ namespace WP.Infrastructure.Persistence.Data.Migrations
         }
     }
 }
+
+#pragma warning restore
