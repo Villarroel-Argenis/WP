@@ -3,13 +3,12 @@
 // Configura el builder, agrega servicios y ejecuta la aplicación.
 // </summary>
 
-using WP.Infrastructure;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 
@@ -20,5 +19,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.MapAccountEndpoints();
 
 await app.RunAsync();
