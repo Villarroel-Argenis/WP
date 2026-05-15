@@ -46,6 +46,8 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
             CancellationToken.None);
 
         result.Count.ShouldBe(2);
+        result[0].Id.ShouldNotBe(Guid.Empty);
+        result[1].Id.ShouldNotBe(Guid.Empty);
         result[0].Type.ShouldBe("Income");
         result[0].Amount.ShouldBe(500m);
         result[0].CurrencyCode.ShouldBe("DOP");
