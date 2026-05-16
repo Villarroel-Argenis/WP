@@ -31,7 +31,7 @@ public sealed class LoggingBehaviorTests
             () =>
             {
                 nextCalled = true;
-                return Task.FromResult(Guid.NewGuid());
+                return Task.FromResult(Result.Success(Guid.NewGuid()));
             },
             CancellationToken.None);
 
@@ -47,11 +47,11 @@ public sealed class LoggingBehaviorTests
         var command = new CreateAccountCommand("Ahorros", 1_000m, "DOP");
         var expectedId = Guid.NewGuid();
 
-        Guid result = await _behavior.Handle(
+        Result<Guid> result = await _behavior.Handle(
             command,
-            () => Task.FromResult(expectedId),
+            () => Task.FromResult(Result.Success(expectedId)),
             CancellationToken.None);
 
-        result.ShouldBe(expectedId);
+        result.Value.ShouldBe(expectedId);
     }
 }

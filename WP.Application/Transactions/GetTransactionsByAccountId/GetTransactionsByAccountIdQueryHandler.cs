@@ -17,7 +17,7 @@ public sealed class GetTransactionsByAccountIdQueryHandler(
     /// <param name="query">La consulta a manejar.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <returns>Lista de transacciones de la cuenta.</returns>
-    public async Task<IReadOnlyList<TransactionResponse>> Handle(
+    public async Task<Result<IReadOnlyList<TransactionResponse>>> Handle(
         GetTransactionsByAccountIdQuery query,
         CancellationToken cancellationToken)
     {

@@ -13,7 +13,7 @@ public sealed class GetAccountByIdQueryHandler(IAccountRepository repository)
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<AccountResponse?> Handle(
+    public async Task<Result<AccountResponse?>> Handle(
         GetAccountByIdQuery query,
         CancellationToken cancellationToken)
     {

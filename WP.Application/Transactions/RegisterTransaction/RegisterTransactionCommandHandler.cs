@@ -18,7 +18,7 @@ public sealed class RegisterTransactionCommandHandler(
     /// <param name="command">El comando a manejar.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <returns>El identificador único de la transacción creada.</returns>
-    public async Task<Guid> Handle(
+    public async Task<Result<Guid>> Handle(
         RegisterTransactionCommand command,
         CancellationToken cancellationToken)
     {

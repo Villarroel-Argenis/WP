@@ -17,5 +17,5 @@ public interface IQueryHandler<in TQuery, TResult>
     /// <param name="query">La consulta a manejar.</param>
     /// <param name="cancellationToken">Token de cancelación opcional.</param>
     /// <returns>Una tarea que representa la operación asíncrona con el resultado.</returns>
-    Task<TResult> Handle(TQuery query, CancellationToken cancellationToken);
+    Task<Result<TResult>> Handle(TQuery query, CancellationToken cancellationToken);
 }

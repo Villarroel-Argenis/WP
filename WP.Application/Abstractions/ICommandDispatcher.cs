@@ -13,7 +13,7 @@ public interface ICommandDispatcher
     /// <param name="command">El comando a despachar.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <returns>El resultado del comando.</returns>
-    Task<TResult> SendAsyn<TCommand, TResult>(
+    Task<Result<TResult>> SendAsyn<TCommand, TResult>(
         TCommand command,
         CancellationToken  cancellationToken  = default)
         where TCommand : ICommand<TResult>;

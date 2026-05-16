@@ -13,7 +13,7 @@ public sealed class CreateAccountCommandHandler(
     /// <param name="command">El comando a manejar.</param>
     /// <param name="cancellationToken">Token de cancelación opcional.</param>
     /// <returns>El identificador único de la cuenta creada.</returns>
-    public async Task<Guid> Handle(CreateAccountCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateAccountCommand command, CancellationToken cancellationToken)
     {
         var currency = Currency.From(command.CurrencyCode);
         var balance = Money.Of(command.InitialAmount, currency);

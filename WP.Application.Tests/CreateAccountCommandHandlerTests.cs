@@ -25,10 +25,10 @@ public class CreateAccountCommandHandlerTests
     {
         var command = new CreateAccountCommand("Ahorros", 1_000m, "DOP");
 
-        Guid id = await _handler.Handle(command, CancellationToken.None);
+        Result<Guid> id = await _handler.Handle(command, CancellationToken.None);
 
-        id.ShouldBeOfType<Guid>();
-        id.ShouldNotBe(Guid.Empty);
+        id.Value.ShouldBeOfType<Guid>();
+        id.Value.ShouldNotBe(Guid.Empty);
     }
 
     /// <summary>

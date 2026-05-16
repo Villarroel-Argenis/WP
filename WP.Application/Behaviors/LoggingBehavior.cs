@@ -15,7 +15,7 @@ public partial class LoggingBehavior<TCommand, TResult>(ILogger<LoggingBehavior<
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <param name="nextHandler">El siguiente paso en el pipeline.</param>
     /// <returns>El resultado del comando.</returns>
-    public Task<TResult> Handle(TCommand command, CommandHandlerNext<TResult> nextHandler, CancellationToken cancellationToken = default)
+    public Task<Result<TResult>> Handle(TCommand command, CommandHandlerNext<TResult> nextHandler, CancellationToken cancellationToken = default)
     {
         string commandName = typeof(TCommand).Name;
 
@@ -23,7 +23,7 @@ public partial class LoggingBehavior<TCommand, TResult>(ILogger<LoggingBehavior<
 
         var stopwatch = Stopwatch.StartNew();
 
-        Task<TResult> result = nextHandler();
+        Task<Result<TResult>> result = nextHandler();
 
         stopwatch.Stop();
 

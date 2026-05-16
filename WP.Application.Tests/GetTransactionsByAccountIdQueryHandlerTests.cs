@@ -41,21 +41,21 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
         _transactionRepository.GetByAccountIdAsync(account.Id, Arg.Any<CancellationToken>())
             .Returns(transactions);
 
-        IReadOnlyList<TransactionResponse> result = await _handler.Handle(
+        Result<IReadOnlyList<TransactionResponse>> result = await _handler.Handle(
             new GetTransactionsByAccountIdQuery(account.Id),
             CancellationToken.None);
 
-        result.Count.ShouldBe(2);
-        result[0].Id.ShouldNotBe(Guid.Empty);
-        result[1].Id.ShouldNotBe(Guid.Empty);
-        result[0].Type.ShouldBe("Income");
-        result[0].Amount.ShouldBe(500m);
-        result[0].CurrencyCode.ShouldBe("DOP");
-        result[0].Description.ShouldBe("Salario");
-        result[0].Tags.ShouldContain("salario");
-        result[1].Type.ShouldBe("Expense");
-        result[1].Amount.ShouldBe(200m);
-        result[1].Description.ShouldBe("Supermercado");
+        result.Value.Count.ShouldBe(2);
+        result.Value[0].Id.ShouldNotBe(Guid.Empty);
+        result.Value[1].Id.ShouldNotBe(Guid.Empty);
+        result.Value[0].Type.ShouldBe("Income");
+        result.Value[0].Amount.ShouldBe(500m);
+        result.Value[0].CurrencyCode.ShouldBe("DOP");
+        result.Value[0].Description.ShouldBe("Salario");
+        result.Value[0].Tags.ShouldContain("salario");
+        result.Value[1].Type.ShouldBe("Expense");
+        result.Value[1].Amount.ShouldBe(200m);
+        result.Value[1].Description.ShouldBe("Supermercado");
     }
 
     /// <summary>
@@ -71,11 +71,11 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
         _transactionRepository.GetByAccountIdAsync(account.Id, Arg.Any<CancellationToken>())
             .Returns(new List<Transaction>());
 
-        IReadOnlyList<TransactionResponse> result = await _handler.Handle(
+        Result<IReadOnlyList<TransactionResponse>> result = await _handler.Handle(
             new GetTransactionsByAccountIdQuery(account.Id),
             CancellationToken.None);
 
-        result.ShouldBeEmpty();
+        result.Value.ShouldBeEmpty();
     }
 
     /// <summary>
@@ -111,11 +111,11 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
         _transactionRepository.GetByAccountIdAsync(account.Id, Arg.Any<CancellationToken>())
             .Returns(transactions);
 
-        IReadOnlyList<TransactionResponse> result = await _handler.Handle(
+        Result<IReadOnlyList<TransactionResponse>> result = await _handler.Handle(
             new GetTransactionsByAccountIdQuery(account.Id),
             CancellationToken.None);
 
-        result[0].TransferId.ShouldBe(transferId);
-        result[0].Type.ShouldBe("Transfer");
+        result.Value[0].TransferId.ShouldBe(transferId);
+        result.Value[0].Type.ShouldBe("Transfer");
     }
 }
