@@ -14,7 +14,7 @@ public sealed class CommandDispatcher(IServiceProvider serviceProvider)
     /// <param name="command">El comando a despachar.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <returns>El resultado del comando.</returns>
-    public Task<TResult> SendAsyn<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TResult>
+    public Task<Result<TResult>> SendAsyn<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TResult>
     {
         ICommandHandler<TCommand, TResult> handler = serviceProvider
             .GetRequiredService<ICommandHandler<TCommand, TResult>>();

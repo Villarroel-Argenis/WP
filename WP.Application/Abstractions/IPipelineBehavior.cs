@@ -5,7 +5,7 @@ namespace WP.Application.Abstractions;
 /// </summary>
 /// <typeparam name="TCommand">Tipo del comando.</typeparam>
 /// <typeparam name="TResult">Tipo del resultado.</typeparam>
-public interface IPipelineBehavior<TCommand, TResult>
+public interface IPipelineBehavior<in TCommand, TResult>
 {
     /// <summary>
     /// Maneja el behavior en el pipeline.
@@ -14,7 +14,7 @@ public interface IPipelineBehavior<TCommand, TResult>
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <param name="nextHandler">El siguiente paso en el pipeline.</param>
     /// <returns>El resultado del comando.</returns>
-    Task<TResult> Handle(
+    Task<Result<TResult>> Handle(
         TCommand command,
         CommandHandlerNext<TResult> nextHandler,
         CancellationToken cancellationToken =  default);

@@ -28,13 +28,13 @@ public class GetAccountByIdQueryHandlerTests
         _repository.GetByIdAsync(account.Id, Arg.Any<CancellationToken>())
             .Returns(account);
 
-        AccountResponse? response = await _handler.Handle(new GetAccountByIdQuery(account.Id), CancellationToken.None);
+        Result<AccountResponse?> response = await _handler.Handle(new GetAccountByIdQuery(account.Id), CancellationToken.None);
 
         response.ShouldNotBeNull();
-        response.Name.ShouldBe("Ahorros");
-        response.Id.ShouldBe(account.Id);
-        response.Amount.ShouldBe(1000);
-        response.CurrencyCode.ShouldBe("DOP");
+        response.Value!.Name.ShouldBe("Ahorros");
+        response.Value.Id.ShouldBe(account.Id);
+        response.Value.Amount.ShouldBe(1000);
+        response.Value.CurrencyCode.ShouldBe("DOP");
     }
 
     /// <summary>

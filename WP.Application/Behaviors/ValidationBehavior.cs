@@ -15,9 +15,19 @@ public class ValidationBehavior<TCommand, TResult>(IValidator<TCommand> validato
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <param name="nextHandler">El siguiente paso en el pipeline.</param>
     /// <returns>El resultado del comando.</returns>
-    public Task<TResult> Handle(TCommand command, CommandHandlerNext<TResult> nextHandler, CancellationToken cancellationToken = default)
+    public Task<Result<TResult>> Handle(TCommand command, CommandHandlerNext<TResult> nextHandler, CancellationToken cancellationToken = default)
     {
-        validator.Validate(command);
-        return nextHandler();
+        try
+        {
+            validator.Validate(command);
+            return nextHandler();
+        }
+        catch (ValidationException ex)
+        {
+            return Task.FromResult(
+                Result.Failure<TResult>(
+                    Error.Validation("Validation.Failed", ex.Message, ex.Errors)));
+        }
+
     }
 }

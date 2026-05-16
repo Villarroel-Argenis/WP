@@ -17,5 +17,5 @@ public interface ICommandHandler<in TCommand, TResult>
     /// <param name="command">El comando a manejar.</param>
     /// <param name="cancellationToken">Token de cancelación opcional.</param>
     /// <returns>Una tarea que representa la operación asíncrona con el resultado.</returns>
-    Task<TResult> Handle(TCommand command, CancellationToken cancellationToken);
+    Task<Result<TResult>> Handle(TCommand command, CancellationToken cancellationToken);
 }

@@ -291,6 +291,7 @@ dotnet_diagnostic.CA1032.severity = suggestion  # Implementar constructores est�
 dotnet_diagnostic.CA1054.severity = suggestion  # Parámetros URI deben ser Uri no string
 dotnet_diagnostic.CA1062.severity = none        # Validar argumentos públicos (cubierto por nullable)
 dotnet_diagnostic.CA1724.severity = suggestion  # Nombres de tipos no deben coincidir con namespaces
+dotnet_diagnostic.CA1716.severity = none
 
 # IDE — Estilo de código como errores de build
 # (requiere <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> en .csproj)

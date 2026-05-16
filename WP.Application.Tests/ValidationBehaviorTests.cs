@@ -31,7 +31,7 @@ public sealed class ValidationBehaviorTests
             () =>
             {
                 nextCalled = true;
-                return Task.FromResult(Guid.NewGuid());
+                return Task.FromResult(Result.Success(Guid.NewGuid()));
             },
             CancellationToken.None);
 
@@ -62,7 +62,7 @@ public sealed class ValidationBehaviorTests
                 () =>
                 {
                     nextCalled = true;
-                    return Task.FromResult(Guid.NewGuid());
+                    return Task.FromResult(Result.Success(Guid.NewGuid()));
                 },
                 CancellationToken.None));
 
@@ -84,7 +84,7 @@ public sealed class ValidationBehaviorTests
             () =>
             {
                 nextCalled = true;
-                return Task.FromResult(Guid.NewGuid());
+                return Task.FromResult(Result.Success(Guid.NewGuid()));
             },
             CancellationToken.None);
 

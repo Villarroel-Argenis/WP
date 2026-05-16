@@ -36,9 +36,9 @@ public sealed class RegisterTransactionCommandHandlerTests
         var command = new RegisterTransactionCommand(
             account.Id, 500m, "DOP", "Income", "Salario");
 
-        Guid id = await _handler.Handle(command, CancellationToken.None);
+        Result<Guid> id = await _handler.Handle(command, CancellationToken.None);
 
-        id.ShouldNotBe(Guid.Empty);
+        id.Value.ShouldNotBe(Guid.Empty);
         account.Balance.Amount.ShouldBe(1_500m);
     }
 

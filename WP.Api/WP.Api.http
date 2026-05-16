@@ -11,7 +11,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "name": "Ahorros",
+    "name": "",
     "initialAmount": 1000.00,
     "currencyCode": "DOP"
 }

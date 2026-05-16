@@ -45,9 +45,9 @@ public static class AccountEndpoint
             request.InitialAmount,
             request.CurrencyCode);
 
-        Guid id = await dispatcher.SendAsyn<CreateAccountCommand, Guid>(command, cancellationToken);
+        Result<Guid> result = await dispatcher.SendAsyn<CreateAccountCommand, Guid>(command, cancellationToken);
 
-        return Results.Created($"/accounts/{id}", new { id });
+        return result.ToHttpResult(id => Results.Created($"/accounts/{id}", new { id }));
     }
 
     private static async Task<IResult> GetAccountByIdAsync(
@@ -57,8 +57,8 @@ public static class AccountEndpoint
     {
 
         var query = new GetAccountByIdQuery(id);
-        AccountResponse? response = await handler.Handle(query, cancellationToken);
-        return Results.Ok(response);
+        Result<AccountResponse?> result = await handler.Handle(query, cancellationToken);
+        return result.ToHttpResult(Results.Ok);
     }
 
     /// <summary>
@@ -79,9 +79,9 @@ public static class AccountEndpoint
             request.TargetAccountId,
             request.Tags);
 
-        Guid id = await dispatcher.SendAsyn<RegisterTransactionCommand, Guid>(command, cancellationToken);
+        Result<Guid> result = await dispatcher.SendAsyn<RegisterTransactionCommand, Guid>(command, cancellationToken);
 
-        return Results.Created($"/accounts/{accountId}/transactions/{id}", new { id });
+        return result.ToHttpResult((id) => Results.Created($"/accounts/{accountId}/transactions/{id}", new { id }));
     }
 
     /// <summary>
@@ -93,8 +93,8 @@ public static class AccountEndpoint
         CancellationToken cancellationToken)
     {
         var query = new GetTransactionsByAccountIdQuery(accountId);
-        IReadOnlyList<TransactionResponse> response = await handler.Handle(query, cancellationToken);
-        return Results.Ok(response);
+        Result<IReadOnlyList<TransactionResponse>> result = await handler.Handle(query, cancellationToken);
+        return result.ToHttpResult(Results.Ok);
     }
 }
 
