@@ -15,7 +15,7 @@ public partial class LoggingBehavior<TCommand, TResult>(ILogger<LoggingBehavior<
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <param name="nextHandler">El siguiente paso en el pipeline.</param>
     /// <returns>El resultado del comando.</returns>
-    public Task<Result<TResult>> Handle(TCommand command, CommandHandlerNext<TResult> nextHandler, CancellationToken cancellationToken = default)
+    public async Task<Result<TResult>> Handle(TCommand command, CommandHandlerNext<TResult> nextHandler, CancellationToken cancellationToken = default)
     {
         string commandName = typeof(TCommand).Name;
 
@@ -23,11 +23,19 @@ public partial class LoggingBehavior<TCommand, TResult>(ILogger<LoggingBehavior<
 
         var stopwatch = Stopwatch.StartNew();
 
-        Task<Result<TResult>> result = nextHandler();
+        Result<TResult> result = await nextHandler();
 
         stopwatch.Stop();
 
-        LogComandoCommandnameCompletadoEnElapsemsMs(commandName, stopwatch.ElapsedMilliseconds);
+        if (result.IsFailure)
+        {
+            LogComandoCommandnameConEerorCode(commandName, result.Error.Code);
+        }
+        else
+        {
+            LogComandoCommandnameCompletadoEnElapsemsMs(commandName, stopwatch.ElapsedMilliseconds);
+        }
+
         return result;
     }
 
@@ -36,4 +44,7 @@ public partial class LoggingBehavior<TCommand, TResult>(ILogger<LoggingBehavior<
 
     [LoggerMessage(LogLevel.Information, "Comando {CommandName} completado en {ElapseMs}ms")]
     partial void LogComandoCommandnameCompletadoEnElapsemsMs(string commandName, long elapseMs);
+
+    [LoggerMessage(LogLevel.Error, "Comando {CommandName} con error: {Code}")]
+    partial void LogComandoCommandnameConEerorCode(string commandName, string code);
 }
