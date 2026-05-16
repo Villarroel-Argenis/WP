@@ -11,22 +11,16 @@ public sealed class AccountRepository(WpDbContext context) : IAccountRepository
     /// <param name="account">La cuenta a agregar.</param>
     /// <param name="cancellationToken">Token de cancelación opcional.</param>
     /// <returns>Una tarea que representa la operación asíncrona.</returns>
-    public async Task AddAsync(Account account, CancellationToken cancellationToken = default)
-    {
+    public async Task AddAsync(Account account, CancellationToken cancellationToken = default) =>
         await context.Accounts.AddAsync(account, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-    }
 
     /// <summary>
     /// Actualiza una cuenta existente en el repositorio.
     /// </summary>
     /// <param name="account">La cuenta a actualizar.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
-    public async Task UpdateAsync(Account account, CancellationToken cancellationToken)
-    {
-        context.Accounts.Update(account);
-        await context.SaveChangesAsync(cancellationToken);
-    }
+    public async Task UpdateAsync(Account account, CancellationToken cancellationToken) =>
+        await Task.FromResult(context.Accounts.Update(account));
 
     /// <summary>
     /// Obtiene una cuenta por su identificador de forma asíncrona.

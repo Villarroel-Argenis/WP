@@ -3,7 +3,7 @@ namespace WP.Infrastructure.Persistence;
 /// <summary>
 /// Contexto de base de datos para la aplicación WP utilizando Entity Framework.
 /// </summary>
-public class WpDbContext(DbContextOptions options) : DbContext(options)
+public class WpDbContext(DbContextOptions options) : DbContext(options), IUnitOfWork
 {
     /// <summary>
     /// Obtiene el conjunto de entidades Account.

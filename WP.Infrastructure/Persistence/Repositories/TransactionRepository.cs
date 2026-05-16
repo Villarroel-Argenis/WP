@@ -12,11 +12,8 @@ public sealed class TransactionRepository(WpDbContext context) : ITransactionRep
     /// </summary>
     /// <param name="transaction">La transacción a agregar.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
-    public async Task AddAsync(Transaction transaction, CancellationToken cancellationToken)
-    {
+    public async Task AddAsync(Transaction transaction, CancellationToken cancellationToken) =>
         await context.Transactions.AddAsync(transaction, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-    }
 
     /// <summary>
     /// Obtiene todas las transacciones de una cuenta.
