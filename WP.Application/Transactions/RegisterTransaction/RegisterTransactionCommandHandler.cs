@@ -5,12 +5,10 @@ namespace WP.Application.Transactions.RegisterTransaction;
 /// </summary>
 /// <param name="accountRepository">Repositorio de cuentas.</param>
 /// <param name="transactionRepository">Repositorio de transacciones.</param>
-/// <param name="validator">validador para crear la transaccion</param>
 /// /// <param name="dispatcher">Disparador de domain events para agregados</param>
 public sealed class RegisterTransactionCommandHandler(
     IAccountRepository accountRepository,
     ITransactionRepository transactionRepository,
-    IValidator<RegisterTransactionCommand> validator,
     IDomainEventDispatcher dispatcher)
     : ICommandHandler<RegisterTransactionCommand, Guid>
 {
@@ -24,7 +22,6 @@ public sealed class RegisterTransactionCommandHandler(
         RegisterTransactionCommand command,
         CancellationToken cancellationToken)
     {
-        validator.Validate(command);
 
         Account account = await accountRepository.GetByIdAsync(
                               command.AccountId, cancellationToken)

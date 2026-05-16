@@ -16,12 +16,10 @@ public sealed class RegisterTransactionCommandHandlerTests
     {
         _accountRepository = Substitute.For<IAccountRepository>();
         ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
-        IValidator<RegisterTransactionCommand> validator = Substitute.For<IValidator<RegisterTransactionCommand>>();
         _dispatcher = Substitute.For<IDomainEventDispatcher>();
         _handler = new RegisterTransactionCommandHandler(
             _accountRepository,
             transactionRepository,
-            validator,
             _dispatcher);
     }
 

@@ -37,7 +37,7 @@ public static class AccountEndpoint
 
     private static async Task<IResult> CreateAccountAsync(
         CreateAccountRequest request,
-        ICommandHandler<CreateAccountCommand, Guid> handler,
+        ICommandDispatcher dispatcher,
         CancellationToken cancellationToken)
     {
         var command = new CreateAccountCommand(
@@ -45,7 +45,7 @@ public static class AccountEndpoint
             request.InitialAmount,
             request.CurrencyCode);
 
-        Guid id = await handler.Handle(command, cancellationToken);
+        Guid id = await dispatcher.SendAsyn<CreateAccountCommand, Guid>(command, cancellationToken);
 
         return Results.Created($"/accounts/{id}", new { id });
     }
@@ -67,7 +67,7 @@ public static class AccountEndpoint
     private static async Task<IResult> RegisterTransactionAsync(
         Guid accountId,
         RegisterTransactionRequest request,
-        ICommandHandler<RegisterTransactionCommand, Guid> handler,
+        ICommandDispatcher dispatcher,
         CancellationToken cancellationToken)
     {
         var command = new RegisterTransactionCommand(
@@ -79,7 +79,7 @@ public static class AccountEndpoint
             request.TargetAccountId,
             request.Tags);
 
-        Guid id = await handler.Handle(command, cancellationToken);
+        Guid id = await dispatcher.SendAsyn<RegisterTransactionCommand, Guid>(command, cancellationToken);
 
         return Results.Created($"/accounts/{accountId}/transactions/{id}", new { id });
     }

@@ -24,6 +24,10 @@ public static class DependencyInjection
 
         services.AddScoped<IDomainEventConsumer<TransactionRegisteredDomainEvent>,
             OnTransactionRegistered>();
+
+        services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         return services;
     }
 }

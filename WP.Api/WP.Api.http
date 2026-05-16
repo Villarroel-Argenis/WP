@@ -23,7 +23,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "amount": 500.00,
+    "amount": -500.00,
     "currencyCode": "DOP",
     "type": "Income",
     "description": "Salario",
