@@ -96,8 +96,10 @@ public sealed class RegisterTransactionCommandHandlerTests
         var command = new RegisterTransactionCommand(
             Guid.NewGuid(), 500m, "DOP", "Income");
 
-        await Should.ThrowAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None));
+        Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
+
+        result.IsFailure.ShouldBeTrue();
+        result.Error.Code.ShouldBe("Account.NotFound");
     }
 
     /// <summary>
@@ -113,8 +115,12 @@ public sealed class RegisterTransactionCommandHandlerTests
         var command = new RegisterTransactionCommand(
             account.Id, 500m, "DOP", "Invalid");
 
-        await Should.ThrowAsync<ArgumentException>(() =>
-            _handler.Handle(command, CancellationToken.None));
+        Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
+
+        result.IsFailure.ShouldBeTrue();
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.Code.ShouldBe("Transaction.TipoInvalido");
+        result.Error.Description.ShouldBe("El tipo de transacción 'Invalid' no es válido.");
     }
 
     /// <summary>

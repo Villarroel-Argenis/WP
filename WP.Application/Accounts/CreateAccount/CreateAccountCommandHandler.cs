@@ -15,8 +15,13 @@ public sealed class CreateAccountCommandHandler(
     /// <returns>El identificador único de la cuenta creada.</returns>
     public async Task<Result<Guid>> Handle(CreateAccountCommand command, CancellationToken cancellationToken)
     {
-        var currency = Currency.From(command.CurrencyCode);
-        var balance = Money.Of(command.InitialAmount, currency);
+        Result<Currency> currency = Currency.From(command.CurrencyCode);
+        if (currency.IsFailure)
+        {
+            return currency.Error;
+        }
+
+        var balance = Money.Of(command.InitialAmount, currency.Value);
         var account = Account.Create(command.Name, balance);
 
         await accountRepository.AddAsync(account, cancellationToken);

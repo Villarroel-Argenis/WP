@@ -32,8 +32,8 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
         var account = Account.Create("Ahorros", Money.Of(1_000m, Currency.Dop));
         var transactions = new List<Transaction>
         {
-            Transaction.CreateIncome(account.Id, Money.Of(500m, Currency.Dop), "Salario", ["salario"]),
-            Transaction.CreateExpense(account.Id, Money.Of(200m, Currency.Dop), "Supermercado")
+            Transaction.CreateIncome(account.Id, Money.Of(500m, Currency.Dop), "Salario", [Tag.From("salario").Value]).Value,
+            Transaction.CreateExpense(account.Id, Money.Of(200m, Currency.Dop), "Supermercado").Value
         };
 
         _accountRepository.GetByIdAsync(account.Id, Arg.Any<CancellationToken>())
@@ -103,7 +103,7 @@ public sealed class GetTransactionsByAccountIdQueryHandlerTests
         var transferId = Guid.NewGuid();
         var transactions = new List<Transaction>
         {
-            Transaction.CreateTransfer(account.Id, Money.Of(300m, Currency.Dop), transferId)
+            Transaction.CreateTransfer(account.Id, Money.Of(300m, Currency.Dop), transferId).Value
         };
 
         _accountRepository.GetByIdAsync(account.Id, Arg.Any<CancellationToken>())

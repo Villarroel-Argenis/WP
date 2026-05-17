@@ -13,7 +13,7 @@ public sealed class TransactionTests
     {
         var amount = Money.Of(1000, Currency.Dop);
 
-        var transaction = Transaction.CreateIncome(Guid.NewGuid(), amount, "Salario");
+        Transaction transaction = Transaction.CreateIncome(Guid.NewGuid(), amount, "Salario").Value;
 
         transaction.ShouldNotBeNull();
         transaction.Amount.ShouldBe(amount);
@@ -30,11 +30,11 @@ public sealed class TransactionTests
     {
         var amount = Money.Of(1000, Currency.Dop);
 
-        var transaction = Transaction.CreateIncome(Guid.NewGuid(), amount, "Salario", ["Salario", "Quincena"]);
+        Transaction transaction = Transaction.CreateIncome(Guid.NewGuid(), amount, "Salario", [Tag.From("Salario").Value, Tag.From("Quincena").Value]).Value;
 
         transaction.Tags.Count.ShouldBe(2);
-        transaction.Tags.ShouldContain(t => t == Tag.From("Salario"));
-        transaction.Tags.ShouldContain(t => t == Tag.From("Quincena"));
+        transaction.Tags.ShouldContain(t => t == Tag.From("Salario").Value);
+        transaction.Tags.ShouldContain(t => t == Tag.From("Quincena").Value);
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public sealed class TransactionTests
     {
         var amount = Money.Of(500, Currency.Dop);
 
-        var transaction = Transaction.CreateExpense(Guid.NewGuid(), amount, "Compra de supermercado");
+        Transaction transaction = Transaction.CreateExpense(Guid.NewGuid(), amount, "Compra de supermercado").Value;
 
         transaction.Type.ShouldBe(TransactionType.Expense);
         transaction.ShouldNotBeNull();
@@ -60,7 +60,7 @@ public sealed class TransactionTests
         var amount = Money.Of(500m, Currency.Dop);
         var transferId = Guid.NewGuid();
 
-        var transaction = Transaction.CreateTransfer(Guid.NewGuid(), amount, transferId);
+        Transaction transaction = Transaction.CreateTransfer(Guid.NewGuid(), amount, transferId).Value;
 
         transaction.Type.ShouldBe(TransactionType.Transfer);
         transaction.TransferId.ShouldBe(transferId);
@@ -70,21 +70,13 @@ public sealed class TransactionTests
     /// Verifica que crear una transferencia con TransferId vacío lanza ArgumentException.
     /// </summary>
     [Fact]
-    public void CreateTransferConTransferIdVacioLanzaArgumentException()
+    public void CreateTransferConTransferIdVacioRetornaError()
     {
         var amount = Money.Of(500m, Currency.Dop);
 
-        Should.Throw<ArgumentException>(() =>
-            Transaction.CreateTransfer(Guid.NewGuid(), amount, Guid.Empty));
-    }
+        Result<Transaction> result = Transaction.CreateTransfer(Guid.NewGuid(), amount, Guid.Empty);
 
-    /// <summary>
-    /// Verifica que crear un ingreso con monto nulo lanza ArgumentNullException.
-    /// </summary>
-    [Fact]
-    public void CreateIncomeConMontoNuloLanzaArgumentNullException()
-    {
-        Should.Throw<ArgumentNullException>(() =>
-            Transaction.CreateIncome(Guid.NewGuid(), null!));
+        result.IsFailure.ShouldBeTrue();
+        result.Error.Code.ShouldBe("Transaction.TransferIdVacio");
     }
 }

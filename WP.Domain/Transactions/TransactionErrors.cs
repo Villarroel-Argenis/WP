@@ -1,23 +1,33 @@
 namespace WP.Domain.Transactions;
 
 /// <summary>
-/// Define los errores de dominio relacionados con Transaction.
+/// Errores de dominio relacionados con las transacciones.
 /// </summary>
 public static class TransactionErrors
 {
     /// <summary>
-    /// Error cuando el tipo de transacción es inválido.
+    /// Error cuando el tipo de transacción recibido no es válido.
     /// </summary>
-    public static Error InvalidType(string type) =>
-        Error.Validation(
-            "Transaction.InvalidType",
-            $"Tipo de transacción inválido: {type}.");
+    /// <param name="tipo">El tipo inválido recibido.</param>
+    public static Error TipoInvalido(string tipo) =>
+        Error.Validation("Transaction.TipoInvalido", $"El tipo de transacción '{tipo}' no es válido.");
 
     /// <summary>
-    /// Error cuando se intenta una transferencia sin cuenta destino.
+    /// Error cuando se intenta una transferencia sin especificar la cuenta destino.
     /// </summary>
-    public static readonly Error MissingTargetAccount =
-        Error.Validation(
-            "Transaction.MissingTargetAccount",
-            "La cuenta destino es requerida para transferencias.");
+    public static Error CuentaObjetivoRequerida() =>
+        Error.Validation("Transaction.CuentaObjetivoRequerida", "La cuenta destino es requerida para transferencias.");
+
+    /// <summary>
+    /// Error cuando el identificador de transferencia está vacío.
+    /// </summary>
+    public static Error TransferIdVacio() =>
+        Error.Validation("Transaction.TransferIdVacio", "El identificador de transferencia no puede ser vacío.");
+
+    /// <summary>
+    /// Error cuando no se encuentra una transacción con el identificador especificado.
+    /// </summary>
+    /// <param name="id">El identificador de la transacción no encontrada.</param>
+    public static Error NotFound(Guid id) =>
+        Error.NotFound("Transaction.NotFound", $"No se encontró la transacción con id '{id}'.");
 }

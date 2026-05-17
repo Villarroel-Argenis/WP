@@ -25,10 +25,10 @@ public class CreateAccountCommandHandlerTests
     {
         var command = new CreateAccountCommand("Ahorros", 1_000m, "DOP");
 
-        Result<Guid> id = await _handler.Handle(command, CancellationToken.None);
+        Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
 
-        id.Value.ShouldBeOfType<Guid>();
-        id.Value.ShouldNotBe(Guid.Empty);
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBe(Guid.Empty);
     }
 
     /// <summary>
@@ -47,27 +47,31 @@ public class CreateAccountCommandHandlerTests
     }
 
     /// <summary>
-    /// Verifica que el manejo con nombre vacío lanza ArgumentException.
+    /// Verifica que el manejo con moneda inválida retorna error de validación.
     /// </summary>
     [Fact]
-    public async Task HandleConNombreVacioLanzaArgumentExceptionAsync()
-    {
-        var command = new CreateAccountCommand("", 1_000m, "DOP");
-
-        await Should.ThrowAsync<ArgumentException>(() =>
-            _handler.Handle(command, CancellationToken.None));
-    }
-
-    /// <summary>
-    /// Verifica que el manejo con moneda inválida lanza ArgumentException.
-    /// </summary>
-    [Fact]
-    public async Task HandleConMonedaInvalidaLanzaArgumentExceptionAsync()
+    public async Task HandleConMonedaInvalidaRetornaErrorAsync()
     {
         var command = new CreateAccountCommand("Ahorros", 1_000m, "XX");
 
-        await Should.ThrowAsync<ArgumentException>(() =>
-            _handler.Handle(command, CancellationToken.None));
+        Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
+
+        result.IsFailure.ShouldBeTrue();
+        result.Error.Code.ShouldBe("Currency.CodigoInvalido");
     }
 
+    /// <summary>
+    /// Verifica que el manejo con moneda inválida no llama al repositorio.
+    /// </summary>
+    [Fact]
+    public async Task HandleConMonedaInvalidaNoLlamaRepositorioAsync()
+    {
+        var command = new CreateAccountCommand("Ahorros", 1_000m, "XX");
+
+        await _handler.Handle(command, CancellationToken.None);
+
+        await _repository.DidNotReceive().AddAsync(
+            Arg.Any<Account>(),
+            Arg.Any<CancellationToken>());
+    }
 }

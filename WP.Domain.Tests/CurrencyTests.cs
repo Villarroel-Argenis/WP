@@ -16,9 +16,9 @@ public sealed class CurrencyTests
     [InlineData("USD")]
     public void FromConCodigoRetirnaValido(string? code)
     {
-        var currency = Currency.From(code!);
+        Result<Currency> currency = Currency.From(code!);
 
-        currency.Code.ShouldBe(code);
+        currency.Value.Code.ShouldBe(code);
     }
 
     /// <summary>
@@ -30,5 +30,5 @@ public sealed class CurrencyTests
     [InlineData("  ")]
     [InlineData("US")]
     [InlineData("DOPA")]
-    public void FromConCodigosVaciosOIvalidosRetornaArgumentException(string? code) => Should.Throw<ArgumentException>(() => Currency.From(code!));
+    public void FromConCodigosVaciosOIvalidosRetornaArgumentException(string? code) => Currency.From(code!).IsFailure.ShouldBeTrue();
 }
