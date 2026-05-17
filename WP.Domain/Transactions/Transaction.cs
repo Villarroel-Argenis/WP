@@ -28,10 +28,7 @@ public sealed class Transaction : IAggregateRoot
     /// <summary>Identificador de transferencia, solo aplica para transferencias.</summary>
     public Guid? TransferId { get; }
 
-    /// <summary>Tags asociados a la transacción.</summary>
-    /// <summary>
-    /// Etiquetas asociadas a la transacción.
-    /// </summary>
+    /// <summary>Etiquetas asociadas a la transacción.</summary>
     public IReadOnlyList<Tag> Tags => _tags.AsReadOnly();
 
     /// <summary>Fecha de creación de la transacción.</summary>
@@ -58,9 +55,9 @@ public sealed class Transaction : IAggregateRoot
     }
 
     [ExcludeFromCodeCoverage]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+#pragma warning disable CS8618
     private Transaction() { } // Para EF Core
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+#pragma warning restore CS8618
 
     /// <summary>
     /// Crea una transacción de ingreso.
@@ -69,15 +66,13 @@ public sealed class Transaction : IAggregateRoot
     /// <param name="amount">Monto del ingreso.</param>
     /// <param name="description">Descripción opcional.</param>
     /// <param name="tags">Tags opcionales.</param>
-    /// <returns>Una nueva transacción de ingreso.</returns>
-    public static Transaction CreateIncome(
+    /// <returns>Un resultado con la transacción creada.</returns>
+    public static Result<Transaction> CreateIncome(
         Guid accountId,
         Money amount,
         string? description = null,
-        IEnumerable<string>? tags = null)
+        IEnumerable<Tag>? tags = null)
     {
-        ArgumentNullException.ThrowIfNull(amount);
-
         var transaction = new Transaction(
             Guid.NewGuid(),
             accountId,
@@ -85,7 +80,7 @@ public sealed class Transaction : IAggregateRoot
             TransactionType.Income,
             description,
             null,
-            tags?.Select(Tag.From).ToList() ?? [],
+            tags?.ToList() ?? [],
             DateTime.UtcNow);
 
         transaction.RaiseDomainEvent(new TransactionRegisteredDomainEvent(
@@ -103,15 +98,13 @@ public sealed class Transaction : IAggregateRoot
     /// <param name="amount">Monto del gasto.</param>
     /// <param name="description">Descripción opcional.</param>
     /// <param name="tags">Tags opcionales.</param>
-    /// <returns>Una nueva transacción de gasto.</returns>
-    public static Transaction CreateExpense(
+    /// <returns>Un resultado con la transacción creada.</returns>
+    public static Result<Transaction> CreateExpense(
         Guid accountId,
         Money amount,
         string? description = null,
-        IEnumerable<string>? tags = null)
+        IEnumerable<Tag>? tags = null)
     {
-        ArgumentNullException.ThrowIfNull(amount);
-
         var transaction = new Transaction(
             Guid.NewGuid(),
             accountId,
@@ -119,7 +112,7 @@ public sealed class Transaction : IAggregateRoot
             TransactionType.Expense,
             description,
             null,
-            tags?.Select(Tag.From).ToList() ?? [],
+            tags?.ToList() ?? [],
             DateTime.UtcNow);
 
         transaction.RaiseDomainEvent(new TransactionRegisteredDomainEvent(
@@ -138,20 +131,16 @@ public sealed class Transaction : IAggregateRoot
     /// <param name="transferId">Identificador de la transferencia.</param>
     /// <param name="description">Descripción opcional.</param>
     /// <param name="tags">Tags opcionales.</param>
-    /// <returns>Una nueva transacción de transferencia.</returns>
-    public static Transaction CreateTransfer(
+    /// <returns>Un resultado con la transacción creada.</returns>
+    public static Result<Transaction> CreateTransfer(
         Guid accountId,
         Money amount,
         Guid transferId,
         string? description = null,
-        IEnumerable<string>? tags = null)
+        IEnumerable<Tag>? tags = null)
     {
-        ArgumentNullException.ThrowIfNull(amount);
-
         if (transferId == Guid.Empty)
-        {
-            throw new ArgumentException("TransferId no puede ser vacío.", nameof(transferId));
-        }
+            return TransactionErrors.TransferIdVacio();
 
         var transaction = new Transaction(
             Guid.NewGuid(),
@@ -160,7 +149,7 @@ public sealed class Transaction : IAggregateRoot
             TransactionType.Transfer,
             description,
             transferId,
-            tags?.Select(Tag.From).ToList() ?? [],
+            tags?.ToList() ?? [],
             DateTime.UtcNow);
 
         transaction.RaiseDomainEvent(new TransactionRegisteredDomainEvent(
@@ -171,17 +160,12 @@ public sealed class Transaction : IAggregateRoot
         return transaction;
     }
 
-    /// <summary>
-    /// Obtiene los eventos de dominio pendientes.
-    /// </summary>
+    /// <summary>Obtiene los eventos de dominio pendientes.</summary>
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    /// <summary>
-    /// Limpia los eventos de dominio después de ser despachados.
-    /// </summary>
+    /// <summary>Limpia los eventos de dominio después de ser despachados.</summary>
     public void ClearDomainEvents() => _domainEvents.Clear();
 
     private void RaiseDomainEvent(IDomainEvent domainEvent) =>
         _domainEvents.Add(domainEvent);
-
 }

@@ -32,7 +32,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             money.Property(m => m.Currency)
                 .HasConversion(
                     c => c.Code, // Convertir a string para almacenar en la base de datos
-                    s => Currency.From(s) // Convertir de string a Currency al leer de la base de datos
+                    s => Currency.FromTrustedSource(s) // Convertir de string a Currency al leer de la base de datos
                 )
                 .HasColumnName("balance_currency")
                 .HasMaxLength(3)

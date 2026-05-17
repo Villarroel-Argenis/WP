@@ -33,15 +33,24 @@ public sealed record Currency
     /// <param name="code">El código de moneda de tres letras.</param>
     /// <returns>Una nueva instancia de Currency con el código especificado.</returns>
     /// <exception cref="ArgumentException">Se lanza cuando el código es nulo, vacío o no tiene exactamente 3 caracteres.</exception>
-    public static Currency From(string code)
+    public static Result<Currency> From(string code)
     {
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new ArgumentException("El codigo de la moneda no puede ser vacio.", nameof(code));
+            return CurrencyErrors.CodigoVacio();
         }
 
         string normalizedCode = code.Trim().ToUpperInvariant();
 
-        return normalizedCode.Length != 3 ? throw new ArgumentException("El codigo de la moneda debe tener exactamente 3 caracteres.", nameof(code)) : new Currency(normalizedCode);
+        return normalizedCode.Length != 3
+            ? CurrencyErrors.CodigoInvalido(normalizedCode)
+            : new Currency(normalizedCode);
     }
+
+    /// <summary>
+    /// Crea una instancia de <see cref="Currency"/> desde una fuente de datos confiable.
+    /// Solo usar en infraestructura al leer datos previamente validados.
+    /// </summary>
+    /// <param name="code">El código almacenado en la base de datos.</param>
+    public static Currency FromTrustedSource(string code) => new(code);
 }

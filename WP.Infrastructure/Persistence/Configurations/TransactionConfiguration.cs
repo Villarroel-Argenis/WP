@@ -32,7 +32,7 @@ public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transact
             money.Property(m => m.Currency)
                 .HasConversion(
                     currency => currency.Code,
-                    code => Currency.From(code))
+                    code => Currency.FromTrustedSource(code))
                 .HasColumnName("currency")
                 .HasMaxLength(3)
                 .IsRequired();

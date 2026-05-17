@@ -18,16 +18,16 @@ public sealed record Tag
     /// </summary>
     /// <param name="name">El nombre del tag.</param>
     /// <returns>Una nueva instancia de Tag.</returns>
-    public static Tag From(string name)
+    public static Result<Tag> From(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("El nombre del tag no puede ser vacío.", nameof(name));
+            return Result.Failure<Tag>(TagErrors.NombreVacio());
         }
 
         if (name.Length > 50)
         {
-            throw new ArgumentException("El nombre del tag no puede superar 50 caracteres.", nameof(name));
+            return Result.Failure<Tag>(TagErrors.NombreMuyLargo(50));
         }
 
         return new Tag(name.Trim().ToLowerInvariant());

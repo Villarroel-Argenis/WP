@@ -11,9 +11,9 @@ public sealed class TagTests
     [Fact]
     public void FromConNombreValidoRetornaTag()
     {
-        var tag = Tag.From("Salario");
+        Result<Tag> tag = Tag.From("Salario");
 
-        tag.Name.ShouldBe("salario");
+        tag.Value.Name.ShouldBe("salario");
     }
 
     /// <summary>
@@ -22,9 +22,9 @@ public sealed class TagTests
     [Fact]
     public void FromNormalizaElNombreAMinusculas()
     {
-        var tag = Tag.From("  TRABAJO  ");
+        Result<Tag> tag = Tag.From("  TRABAJO  ");
 
-        tag.Name.ShouldBe("trabajo");
+        tag.Value.Name.ShouldBe("trabajo");
     }
 
     /// <summary>
@@ -34,10 +34,7 @@ public sealed class TagTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void FromConNombreVacioLanzaArgumentException(string? name)
-    {
-        Should.Throw<ArgumentException>(() => Tag.From(name!));
-    }
+    public void FromConNombreVacioLanzaArgumentException(string? name) => Tag.From(name!).IsFailure.ShouldBeTrue();
 
     /// <summary>
     /// Verifica que crear un tag con nombre mayor a 50 caracteres lanza ArgumentException.
@@ -45,9 +42,12 @@ public sealed class TagTests
     [Fact]
     public void FromConNombreMayorA50CaracteresLanzaArgumentException()
     {
-        string name = new string('a', 51);
+        string name = new('a', 51);
 
-        Should.Throw<ArgumentException>(() => Tag.From(name));
+        Result<Tag> result = Tag.From(name);
+
+        result.IsFailure.ShouldBeTrue();
+        result.Error.Code.ShouldBe("Tag.NombreMuyLargo");
     }
 
     /// <summary>
@@ -56,8 +56,8 @@ public sealed class TagTests
     [Fact]
     public void DosTagsConMismoNombreSonIguales()
     {
-        var tag1 = Tag.From("salario");
-        var tag2 = Tag.From("salario");
+        Tag tag1 = Tag.From("salario").Value;
+        Tag tag2 = Tag.From("salario").Value;
 
         tag1.ShouldBe(tag2);
     }
@@ -68,8 +68,8 @@ public sealed class TagTests
     [Fact]
     public void DosTagsConDiferenteNombreNoSonIguales()
     {
-        var tag1 = Tag.From("salario");
-        var tag2 = Tag.From("trabajo");
+        Result<Tag> tag1 = Tag.From("salario");
+        Result<Tag> tag2 = Tag.From("trabajo");
 
         tag1.ShouldNotBe(tag2);
     }
