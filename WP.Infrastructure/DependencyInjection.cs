@@ -32,6 +32,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
 
+        services.AddSingleton<OutboxInterceptor>();
+
         return services;
     }
 }

@@ -10,6 +10,3 @@ global using WP.Application.Transactions.GetTransactionsByAccountId;
 global using WP.Application.Transactions.RegisterTransaction;
 global using WP.Domain.Primitives;
 global using WP.Infrastructure;
-
-
-

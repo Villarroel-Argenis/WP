@@ -140,7 +140,9 @@ public sealed class Transaction : IAggregateRoot
         IEnumerable<Tag>? tags = null)
     {
         if (transferId == Guid.Empty)
+        {
             return TransactionErrors.TransferIdVacio();
+        }
 
         var transaction = new Transaction(
             Guid.NewGuid(),
