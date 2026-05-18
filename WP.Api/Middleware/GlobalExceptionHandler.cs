@@ -1,29 +1,32 @@
 namespace WP.Api.Middleware;
 
 /// <summary>
-/// Manejador global de excepciones que captura y maneja las excepciones no controladas en la aplicación, proporcionando respuestas adecuadas según el tipo de excepción.
+/// Manejador global de excepciones que captura excepciones no controladas,
+/// proporcionando respuestas adecuadas según el tipo de excepción.
 /// </summary>
-/// <param name="logger"></param>
+/// <param name="logger">Logger para registrar las excepciones capturadas.</param>
 public partial class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     /// <summary>
-    /// Intenta manejar una excepción capturada durante el procesamiento de una solicitud HTTP, determinando el código de estado y el mensaje de error apropiados según el tipo de excepción, y escribiendo una respuesta JSON con los detalles del error.
+    /// Intenta manejar una excepción no controlada durante el procesamiento de una solicitud HTTP.
     /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="exception"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    /// <param name="httpContext">El contexto HTTP de la solicitud.</param>
+    /// <param name="exception">La excepción capturada.</param>
+    /// <param name="cancellationToken">Token de cancelación.</param>
+    /// <returns>Siempre retorna <c>true</c> indicando que la excepción fue manejada.</returns>
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext httpContext,
+        Exception exception,
+        CancellationToken cancellationToken)
     {
-        var (statusCode, title) = exception switch
+        (int statusCode, string title) = exception switch
         {
-            NotFoundException => (StatusCodes.Status404NotFound, "Recurso no encontrado"),
-            ArgumentException => (StatusCodes.Status400BadRequest, "Solicitud invalida"),
-            ValidationException => (StatusCodes.Status400BadRequest, "Errores de validacion"),
-            _ => (StatusCodes.Status500InternalServerError, "Error interno dek servidor")
+            ValidationException => (StatusCodes.Status400BadRequest, "Errores de validación"),
+            _ => (StatusCodes.Status500InternalServerError, "Error interno del servidor")
         };
 
         LogExcepcionCapturadaMessage(exception.Message, exception);
+
         var problemDetails = new ProblemDetails
         {
             Status = statusCode,
@@ -31,7 +34,7 @@ public partial class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logg
             Detail = exception.Message
         };
 
-        if(exception is ValidationException validationException)
+        if (exception is ValidationException validationException)
         {
             problemDetails.Extensions["errors"] = validationException.Errors.ToDictionary(
                 kvp => kvp.Key,
